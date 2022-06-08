@@ -14,12 +14,12 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      # - run: echo "A first hello"
-      # - run: mkdir -p my_workspace
-      - run: echo "hello world" > ~/output.txt
+      - run: echo "A first hello"
+      - run: mkdir -p my_workspace
+      - run: echo "hello world" > my_workspace/output.txt
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory
-          root: ~/
+          root: my_workspace/
           # Must be relative path from root
           paths:
             - output.txt
@@ -37,10 +37,10 @@ jobs:
       # - run: echo "A more familiar hi"
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
-          at: ~/
+          at: my_workspace/
 
       - run: |
-          if [[ $(cat ~/output.txt) == "hello world" ]]; then
+          if [[ $(cat my_workspace/output.txt) == "hello world" ]]; then
             echo "It worked!";
           else
             echo "Nope!"; exit 1
