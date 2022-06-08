@@ -5,7 +5,7 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  save-hello_world_output:
+  save_hello_world_output:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
@@ -14,12 +14,12 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
-      - run: echo "A first hello"
-      - run: mkdir -p my_workspace
-      - run: echo "Trying out workspaces" > my_workspace/output.txt
+      # - run: echo "A first hello"
+      # - run: mkdir -p my_workspace
+      - run: echo "hello world" > ~/output.txt
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory
-          root: my_workspace
+          root: ~/
           # Must be relative path from root
           paths:
             - output.txt
@@ -33,14 +33,14 @@ jobs:
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
-      - checkout
-      - run: echo "A more familiar hi"
+      # - checkout
+      # - run: echo "A more familiar hi"
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
-          at: my_workspace
+          at: ~/
 
       - run: |
-          if [[ $(cat my_workspace/output.txt) == "Trying out workspaces" ]]; then
+          if [[ $(cat ~/output.txt) == "hello world" ]]; then
             echo "It worked!";
           else
             echo "Nope!"; exit 1
@@ -50,5 +50,7 @@ jobs:
 workflows:
   say-hello-workflow:
     jobs:
-      - save-hello_world_output
-      - print_output_file
+      - save_hello_world_output
+      - print_output_file:
+                requires:
+                  - save_hello_world_output
